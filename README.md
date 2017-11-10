@@ -2,6 +2,11 @@
 
 this repo is only meant to hold my binary of docker-machine-driver-kvm with support for remote host.
 
+## Demo!
+
+[![asciicast](https://asciinema.org/a/146847.png)](https://asciinema.org/a/146847?autoplay=1)
+
+
 details [here](https://github.com/dhiltgen/docker-machine-kvm/pull/63)
 
 ## basic testing

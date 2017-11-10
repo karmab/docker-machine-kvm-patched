@@ -3,12 +3,16 @@
 source `which util.sh`
 
 backtotop
-desc "Dont check ssh-keyscan -H 192.168.122.1 >> ~/.ssh/known_hosts"
-run "export KVM_CONNECTION_URL=qemu+ssh://root@192.168.122.1/system"
+desc "Accept ssh host key of the remote hypervisor"
+run "ssh-keyscan -H 192.168.122.1 >> ~/.ssh/known_hosts"
 
 backtotop
-desc "Check we have access to it "
+desc "Check we have access to it"
 run "ssh root@192.168.122.1 hostname"
+
+backtotop
+desc "Make sure there s no boot2docker.iso available so it gets created"
+run "ssh root@192.168.122.1 rm -rf /var/lib/libvirt/images/boot2docker.iso"
 
 # docker machine
 
@@ -27,7 +31,7 @@ run "docker-machine ssh magico hostname"
 # clean up 
 backtotop
 desc "Delete this vm"
-run "docker-machine kill magico"
+run "docker-machine rm -f magico"
 
 # Minishift 
 
@@ -49,17 +53,21 @@ run "virsh -c qemu+ssh://root@192.168.122.1/system list"
 
 backtotop
 desc "Access this vm"
-run "docker-machine ssh minishift hostname"
+run "minishift ssh hostname"
 
 backtotop
 desc "Set openshift environment"
-run "minishift oc-env"
+run "eval $(minishift oc-env)"
 
 backtotop
-desc "Test openshift environment"
-run "oc get pod"
+desc "Login openshift environment"
+run "oc login -u system:admin"
+
+backtotop
+desc "Check pods"
+run "oc get pod --all-namespaces"
 
 # clean up 
 backtotop
 desc "Delete this vm"
-run "minishift delete"
+run "minishift delete --force"
